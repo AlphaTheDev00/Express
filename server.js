@@ -1,80 +1,81 @@
-import express from 'express'
-import supplements from './data.js'
+import express from 'express';
+import supplements from './data.js';
+import mongoose from 'mongoose';
+import connectDB from './db.js';
+import Supplement from './Model/Supplements.js';
 
 const app = express()
-
 app.use(express.json())
 
+connectDB();
+
 // GET /supplements - Return all supplements
-app.get('/supplements', function(req, res) {
-  res.send(supplements)
-})
+app.get('/supplements', async (req, res) => {
+  try {
+    const supplements = await Supplement.find();
+    res.status(200).json(supplements);
+  } catch (error) {
+    res.status(500).json({message: error.message});
+  }
+});
 
 // GET /supplements/:name - Return a supplement by name
-app.get('/supplements/:name', function(req, res) {
-  const supplementName = req.params.name
-
-  const supplement = supplements.find((currentSupplement) => {
-    return currentSupplement.name.toLowerCase() === supplementName.toLowerCase()
-  })
-
-  res.send(supplement || { message: 'Supplement not found' })
-})
-
-
-//Update supplement by Name
-app.put('/supplements/:name', (req, res) => {
-    const supplementName = req.params.name;
-  
-    // Find the supplement by name
-    const supplement = supplements.find(
-      (currentSupplement) =>
-        currentSupplement.name.toLowerCase() === supplementName.toLowerCase()
-    );
-  
+app.get('/supplements/:name', async (req, res) => {
+  try {
+    const supplement = await Supplement.findOne({ name: req.params.name});
     if (!supplement) {
-      return res.status(404).send({ message: 'Supplement not found' });
+      return res.status(404).json({ message: 'Supplement not found'});
     }
-  
-    // Update properties of the supplement with the request body
-    const updatedData = req.body;
-  
-    // Validate the input data (optional)
-    if (Object.keys(updatedData).length === 0) {
-      return res.status(400).send({ message: 'No data provided to update' });
+    res.status(200).json(supplement);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+//PUT / Update supplement by Name
+app.put('/supplements/:name', async (req, res) => {
+  try {
+    const supplement = await Supplement.findOneAndUpdate(
+      { name: req.params.name},
+      req.body,
+      {new : true} // Return the update document
+    );
+    if (!supplement) {
+      return res.status(404).json({ message: 'Supplement not found'});
     }
+    res.status(200).json({message: 'Supplement updated successfully', updated: supplement});
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
   
-    // Update the supplement (merge properties)
-    Object.assign(supplement, updatedData);
-  
-    res.send({ message: 'Supplement updated successfully', updated: supplement });
-  });
 
 // POST /supplements - Add a new supplement
-app.post('/supplements', function(req, res) {
-  const newSupplement = req.body
-  supplements.push(newSupplement)
-  res.status(201).send(newSupplement)
-})
+app.post('/supplements', async (req, res) => {
+ try {
+  const newSupplement = new Supplement(req.body);
+  const savedSupplement = await newSupplement.save();
+  res.status(201).json(savedSupplement);
+ } catch (error) {
+  res.status(500).json({message: error.message});
+ }
+});
 
-app.delete('/supplements/:name', (req, res) => {
-    const supplementName = req.params.name;
-  
-    const index = supplements.findIndex(
-      (currentSupplement) =>
-        currentSupplement.name.toLowerCase() === supplementName.toLowerCase()
-    );
-  
-    if (index === -1) {
-      return res.status(404).send({ message: 'Supplement not found' });
+//Delete a supplement by name
+app.delete('/supplements/:name', async (req, res) => {
+    try {
+      const deletedSupplement = await Supplement.findOneAndDelete({ name: req.params.name});
+      if (!deletedSupplement) {
+        return res.status(404).json({ message: 'Supplement not found'});
+      }
+      res.status(200).json({ message: 'Supplement deleted successfully', deleted: deletedSupplement});
+    } catch (error) {
+      res.status(500).json({ message: error.message});
     }
-  
-    // Remove the supplement from the array
-    const deletedSupplement = supplements.splice(index, 1);
-  
-    res.send({ message: 'Supplement deleted successfully', deleted: deletedSupplement });
   });
 
-app.listen(3000, () => {
-  console.log('Server is running on port 3000!')
-})
+  const port = 3000; // Change to another available port
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}!`);
+  });

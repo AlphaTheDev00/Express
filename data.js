@@ -1,45 +1,45 @@
 // export default exports this data array so it can be imported in other files.
 const supplements = [
-    {
-      name: "Vitamin C",
-      type: "Vitamins",
-      benefits: [
-        "Boosts immune system",
-        "Promotes healthy skin",
-        "Helps the body absorb iron"
-      ],
-      usage: "Take 500 mg daily with food"
-    },
-    {
-      name: "Creatine",
-      type: "Protein & Amino Acids",
-      benefits: [
-        "Increases muscle mass",
-        "Enhances athletic performance",
-        "Speeds up recovery"
-      ],
-      usage: "Take 5g before or after workouts"
-    },
-    {
-      name: "Omega-3 Fish Oil",
-      type: "Essential Fatty Acids",
-      benefits: [
-        "Supports heart health",
-        "Reduces inflammation",
-        "Improves brain function"
-      ],
-      usage: "Take 1-2 soft gels daily"
-    },
-    {
-      name: "Magnesium",
-      type: "Minerals",
-      benefits: [
-        "Supports muscle function",
-        "Promotes relaxation and sleep",
-        "Helps maintain healthy bones"
-      ],
-      usage: "Take 200-400 mg before bed"
-    }
-  ];
-  
-  export default supplements;
+  {
+    name: "Whey Protein",
+    category: "Protein",
+    price: 29.99,
+    stock: 150,
+    description: "High-quality whey protein powder for muscle recovery and growth.",
+    createdAt: new Date(),
+  },
+  {
+    name: "Creatine Monohydrate",
+    category: "Pre-workout",
+    price: 19.99,
+    stock: 200,
+    description: "Pure creatine monohydrate for increased strength and endurance.",
+    createdAt: new Date(),
+  },
+  {
+    name: "BCAA",
+    category: "Amino Acids",
+    price: 24.99,
+    stock: 100,
+    description: "Branched-chain amino acids for muscle recovery and performance.",
+    createdAt: new Date(),
+  },
+  {
+    name: "Multivitamin",
+    category: "Vitamins",
+    price: 14.99,
+    stock: 50,
+    description: "A comprehensive multivitamin for overall health and wellness.",
+    createdAt: new Date(),
+  },
+  {
+    name: "Fish Oil",
+    category: "Supplements",
+    price: 19.99,
+    stock: 120,
+    description: "High-quality fish oil for heart and brain health.",
+    createdAt: new Date(),
+  }
+];
+
+export default supplements;
