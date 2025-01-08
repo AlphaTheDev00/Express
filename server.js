@@ -58,7 +58,12 @@ app.post('/supplements', async (req, res) => {
   const savedSupplement = await newSupplement.save();
   res.status(201).json(savedSupplement);
  } catch (error) {
+  
+  if (error.name === 'ValidationError') {
+    res.status(400).json({ message: 'Validation Error', errors: error.errors});
+  } else {
   res.status(500).json({message: error.message});
+  }
  }
 });
 
