@@ -10,14 +10,14 @@ const SupplementSchema = new mongoose.Schema({
     category: {
         type: String, 
         required: true,
-        enum: ['Protein', 'Vitamins', 'Minerals', 'Amino Acids','Herbal Supplements' ],
+        enum: ['Protein', 'Vitamins', 'Minerals', 'Amino Acids','Herbal Supplements', 'Pre-workout', 'Supplements' ],
     },
     price: {
         type: Number, 
         required: true,
         min: [1, 'Price must be greater than or equal to 1'],
-    }
-        ,
+    },
+        
     stock: 
     {type: Number, 
     default: 0,
@@ -32,4 +32,5 @@ const SupplementSchema = new mongoose.Schema({
 });
 
 
-export default mongoose.model('Supplement', SupplementSchema);
+const Supplement = mongoose.model('Supplement', SupplementSchema);
+export default Supplement;
